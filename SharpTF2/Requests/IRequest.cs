@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpTF2
+namespace SharpTF2.Requests
 {
     public interface IRequest
     {
-        void SetProfileID(String ID);
-
         String GetJSON();
     }
 }

@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 
 namespace SharpTF2.Requests
 {
-    public class TF2BackpackRequest : ProfileRequest
+    /// <summary>
+    /// A request to the http://backpack.tf API.
+    /// </summary>
+    class BackpackTFRequest : BaseRequest
     {
-        public override String GetJSON()
+        public override string GetJSON()
         {
             CheckForAPIKey();
-            CheckForProfileID();
 
-            Uri uri = new Uri(
-                "http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/"+"?key="+APIKey+"&SteamID="+ProfileID);
+            Uri uri = new Uri("http://backpack.tf/api/IGetPrices/v3/?format=json&key="+APIKey);
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             String json = String.Empty;
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
@@ -27,6 +28,7 @@ namespace SharpTF2.Requests
                 reader.Close();
                 dataStream.Close();
             }
+
             return json;
         }
     }

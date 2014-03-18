@@ -4,17 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpTF2
+namespace SharpTF2.Requests
 {
-    public abstract class ProfileRequest : IRequest
+    public abstract class ProfileRequest : BaseRequest
     {
         public String ProfileID { get; set; }
 
-        public abstract String GetJSON();
-
-        public void SetProfileID(string ID)
+        protected void CheckForProfileID()
         {
-            throw new NotImplementedException();
+            if (ProfileID == null)
+                throw new InvalidOperationException("No profile ID provided.");
         }
     }
 }

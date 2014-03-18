@@ -8,15 +8,14 @@ using System.Threading.Tasks;
 
 namespace SharpTF2.Requests
 {
-    public class TF2BackpackRequest : ProfileRequest
+    class SchemaRequest : BaseRequest
     {
         public override String GetJSON()
         {
             CheckForAPIKey();
-            CheckForProfileID();
 
             Uri uri = new Uri(
-                "http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/"+"?key="+APIKey+"&SteamID="+ProfileID);
+                "http://api.steampowered.com/IEconItems_440/GetSchema/v0001/" + "?key=" + APIKey);
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             String json = String.Empty;
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
