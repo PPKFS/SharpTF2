@@ -42,10 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="APIKeyRequest.cs" />
-    <Compile Include="ProfileRequest.cs" />
-    <Compile Include="TF2BackpackRequest.cs" />
-    <Compile Include="IRequest.cs" />
+    <Compile Include="Items\Backpack.cs" />
+    <Compile Include="Items\Item.cs" />
+    <Compile Include="Items\ItemSchema.cs" />
+    <Compile Include="Items\Quality.cs" />
+    <Compile Include="Requests\BackpackTFRequest.cs" />
+    <Compile Include="Requests\BaseRequest.cs" />
+    <Compile Include="Requests\CacheRequest.cs" />
+    <Compile Include="Requests\ProfileRequest.cs" />
+    <Compile Include="Requests\SchemaRequest.cs" />
+    <Compile Include="Requests\TF2BackpackRequest.cs" />
+    <Compile Include="Requests\IRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
