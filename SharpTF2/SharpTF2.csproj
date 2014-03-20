@@ -42,9 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Items\Attribute.cs" />
     <Compile Include="Items\Backpack.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemSchema.cs" />
+    <Compile Include="Items\Origin.cs" />
     <Compile Include="Items\Quality.cs" />
     <Compile Include="Requests\BackpackTFRequest.cs" />
     <Compile Include="Requests\BaseRequest.cs" />
