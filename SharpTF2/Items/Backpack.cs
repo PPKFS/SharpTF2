@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using SharpTF2.Requests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using System.Collections;
 
 namespace SharpTF2.Items
 {
@@ -16,6 +18,8 @@ namespace SharpTF2.Items
     {
         public static String CacheLocation = "cache/backpack.txt";
 
+        #region Get
+        //helper method for requesting backpack data straight from the steam servers
         public static Backpack Get(String profileID, String apiKey)
         {
             TF2BackpackRequest request = new TF2BackpackRequest();
@@ -30,7 +34,7 @@ namespace SharpTF2.Items
             String raw = request.GetJSON();
             JToken json = JObject.Parse(raw)["result"];
 
-            //now we parse
+            //parse it
             int result = json["status"].ToObject<int>();
 
             if (result != 1)
@@ -44,11 +48,14 @@ namespace SharpTF2.Items
             }
 
             Backpack backpack = new Backpack(json["num_backpack_slots"].ToObject<int>());
+            //parse all the items
             List<Item> items = ParseItems(json["items"]);
+
+            //place the items in the backpack
             foreach (Item i in items)
             {
-                if (i.Position == 0 || backpack.items[i.Position] != null)
-                    System.Diagnostics.Debugger.Break();
+                //if (i.Position == 0 || backpack.items[i.Position] != null)
+                //    System.Diagnostics.Debugger.Break();
                 Console.WriteLine("adding item {0} at pos {1}", i.DefIndex, i.Position);
                 backpack.items[i.Position] = i;
             }
@@ -68,6 +75,7 @@ namespace SharpTF2.Items
 
         private static Item ParseItem(JToken itemJSON)
         {
+            //copy across
             uint id = itemJSON["id"].ToObject<uint>();
             uint original_id = itemJSON["original_id"].ToObject<uint>();
             int defindex = itemJSON["defindex"].ToObject<int>();
@@ -79,10 +87,6 @@ namespace SharpTF2.Items
             int origin = itemJSON["origin"] == null ? -1 : itemJSON["origin"].ToObject<int>();
             bool cannotTrade = itemJSON["flag_cannot_trade"] == null ? false : itemJSON["flag_cannot_trade"].ToObject<bool>();
             bool cannotCraft = itemJSON["flag_cannot_craft"] == null ? false : itemJSON["flag_cannot_craft"].ToObject<bool>();
-
-            //String customName = itemJSON["custom_name"] == null ? null : itemJSON["custom_name"].ToObject<String>();
-            //String customDesc = itemJSON["custom_desc"] == null ? null : itemJSON["custom_desc"].ToObject<String>();
-            //TODO: giftwrapped
             int style = itemJSON["style"] == null ? -1 : itemJSON["style"].ToObject<int>();
 
             //equipped by
@@ -114,23 +118,37 @@ namespace SharpTF2.Items
                         ingAttr.IsOutput = attrib["is_output"].ToObject<bool>();
                         ingAttr.Quantity = attrib["quantity"].ToObject<int>();
 
-                        //there's 2 kinds of ingredients - specific (i.e. X of item Y) and nonspecific (i.e. X of Y where Y has attribute Z)
+                        //there's 2 kinds of ingredients - specific (i.e. X of item Y) and nonspecific 
+                        //(i.e. X of Y where Y has attribute Z)
+                        //and now with set #3 of the chem sets, there are just 'X of quality Y' - i.e. 3 strange items
                         if (attrib["itemdef"] == null)
                         {
-                            ingAttr.MatchAll = attrib["match_all_attribs"].ToObject<bool>();
-                            ingAttr.AttributeInfo = new List<Attribute>();
-                            foreach(JToken inner in attrib["attributes"])
+                            //X of quality Y
+                            if (attrib["match_all_attribs"] == null)
                             {
-                                Attribute innerAttr = new Attribute();
+                                ingAttr.ItemDef = IngredientAttribute.AnyItemOfQuality;
+                            }
+                            else
+                            {
+                                //X of Y where Y has attr Z
+                                ingAttr.MatchAll = attrib["match_all_attribs"].ToObject<bool>();
+                                ingAttr.AttributeInfo = new List<Attribute>();
+                                foreach (JToken inner in attrib["attributes"])
+                                {
+                                    Attribute innerAttr = new Attribute();
 
-                                innerAttr.DefIndex = inner["defindex"].ToObject<int>();
-                                innerAttr.Value = inner["value"].ToObject<String>();
-                                innerAttr.FloatValue = inner["float_value"] != null ? inner["float_value"].ToObject<float>() : -1;
-                                ingAttr.AttributeInfo.Add(innerAttr);
+                                    innerAttr.DefIndex = inner["defindex"].ToObject<int>();
+                                    innerAttr.Value = inner["value"].ToObject<String>();
+                                    innerAttr.FloatValue = inner["float_value"] != null ? inner["float_value"].ToObject<float>() : -1;
+                                    ingAttr.AttributeInfo.Add(innerAttr);
+                                }
                             }
                         }
                         else
+                        {
+                            //specific
                             ingAttr.ItemDef = attrib["itemdef"].ToObject<int>();
+                        }
 
                         ingAttr.Quality = (Quality)attrib["quality"].ToObject<int>();
                     }
@@ -150,11 +168,7 @@ namespace SharpTF2.Items
 
             return Item.CreateItem(id, original_id, defindex, level, quality, position, origin, cannotTrade, cannotCraft, equip, attribs);
         }
-
-        private static void ParseAttribute(JToken attribute, Dictionary<int, String> attributeDictionary)
-        {
-            
-        }
+        #endregion
 
         public int NumberOfSlots { get; private set; }
 
@@ -171,9 +185,9 @@ namespace SharpTF2.Items
             throw new NotImplementedException();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
         }
     }
 }

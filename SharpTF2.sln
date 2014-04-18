@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpTF2", "SharpTF2\SharpTF2.csproj", "{B161E6B7-D728-4162-8280-9D0E3ACF5FEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpTF2.Testbed", "TestRunner\SharpTF2.Testbed.csproj", "{D113C37E-7593-44AC-927A-0C5B29DD6B1B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runner", "Runner\Runner.csproj", "{66414463-E26E-4825-944A-3981FE6701EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,10 @@ Global
 		{B161E6B7-D728-4162-8280-9D0E3ACF5FEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B161E6B7-D728-4162-8280-9D0E3ACF5FEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B161E6B7-D728-4162-8280-9D0E3ACF5FEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D113C37E-7593-44AC-927A-0C5B29DD6B1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D113C37E-7593-44AC-927A-0C5B29DD6B1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D113C37E-7593-44AC-927A-0C5B29DD6B1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D113C37E-7593-44AC-927A-0C5B29DD6B1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66414463-E26E-4825-944A-3981FE6701EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66414463-E26E-4825-944A-3981FE6701EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66414463-E26E-4825-944A-3981FE6701EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66414463-E26E-4825-944A-3981FE6701EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

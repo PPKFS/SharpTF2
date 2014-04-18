@@ -25,6 +25,7 @@ namespace SharpTF2.Items
     //we've got a bit of redundancy, but it's not enough to care about
     public class IngredientAttribute : Attribute
     {
+        public static int AnyItemOfQuality = 0xDEADBEE;
         public bool IsOutput;
 
         public int Quantity;
