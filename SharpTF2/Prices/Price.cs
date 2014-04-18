@@ -18,5 +18,9 @@ namespace SharpTF2.Prices
 
         public double HighRefPrice { get; set; }
 
+        public override string ToString()
+        {
+            return LowRefPrice + " - " + HighRefPrice + " ref";
+        }
     }
 }

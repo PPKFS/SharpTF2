@@ -26,10 +26,10 @@ namespace SharpTF2.Items
             TF2BackpackRequest request = new TF2BackpackRequest();
             request.APIKey = apiKey;
             request.ProfileID = profileID;
-            return Backpack.Get(profileID, apiKey, request);
+            return Backpack.Get(request);
         }
 
-        public static Backpack Get(String profileID, String apiKey, IRequest request)
+        public static Backpack Get(IRequest request)
         {
             //get the json
             String raw = request.GetJSON();
@@ -59,6 +59,10 @@ namespace SharpTF2.Items
                 //    System.Diagnostics.Debugger.Break();
                 Console.WriteLine("adding item {0} at pos {1}", i.DefIndex, i.Position);
                 backpack.Items[i.Position-1] = i;
+            }
+            using(StreamWriter writer = new StreamWriter("backpackraw.txt"))
+            {
+                writer.Write(raw);
             }
 
             return backpack;
@@ -164,6 +168,7 @@ namespace SharpTF2.Items
                         attr.SteamInfo.Name = attrib["account_info"]["personaname"].ToObject<String>();
                         attr.SteamInfo.SteamID = attrib["account_info"]["steamid"].ToObject<String>();
                     }
+                    attribs.Add(attr);
                 }
             }
 

@@ -94,12 +94,7 @@ namespace SharpTF2.Prices
                                 price.HighRefPrice = highPrice;
 
                                 //separate australiums, unusuals/crates, and the other one
-                                if (isAus)
-                                    schema.PriceList[String.Join("|", quality, defIndex, isTradable, isCraftable, isAus)] = price;
-                                else if (series == 0)
-                                    schema.PriceList[String.Join("|", quality, defIndex, isTradable, isCraftable)] =  price;
-                                else
-                                    schema.PriceList[String.Join("|", quality, defIndex, isTradable, isCraftable, series)] = price;
+                                schema.PriceList[GetItemKey(quality, defIndex, isTradable, isCraftable, isAus, series)] = price;
                             }
                         }
                     }
@@ -108,20 +103,34 @@ namespace SharpTF2.Prices
             return schema;
         }
 
-        public Price GetPrice(int defindex, Quality quality, int effect = 0)
+        public static String GetItemKey(Item i)
         {
-            Price price;
-            if(effect != 0)
-                PriceList.TryGetValue(String.Join("|", defindex, quality, effect), out price);
+            return GetItemKey(i.Quality, i.DefIndex, i.IsTradable, i.IsCraftable, i.Attributes.Keys.Contains(2027),
+                (i.Quality == Quality.Unusual  && i.DefIndex != 267) ? (int)i.Attributes[134].FloatValue : 0);
+            //stupid haunted metal scrap
+        }
+
+        public static String GetItemKey(Quality quality, int defindex, bool istradable, bool iscraftable, bool isAus = false, int series = 0)
+        {
+            if (isAus)
+                return String.Join("|", quality, defindex, istradable, iscraftable, "Australium");
+            else if (series == 0)
+                return String.Join("|", quality, defindex, istradable, iscraftable, series);
             else
-                PriceList.TryGetValue(String.Join("|", defindex, quality), out price);
-            //if no price, return unpriced
-            return price ?? Price.Unpriced;
+                return String.Join("|", quality, defindex, istradable, iscraftable);
         }
 
         public Price GetPrice(Item i)
         {
-            if (i.IsCraftable)
+            Price price;
+            PriceList.TryGetValue(GetItemKey(i), out price);
+            //if no price, return unpriced
+            return price ?? Price.Unpriced;
+        }
+
+        public void GetPrice(int i)
+        {
+            /*if (i.IsCraftable)
             {
                 if(i.Quality == Quality.Unusual)
                     return GetPrice(i.DefIndex, i.Quality, (int)i.Attributes[134].FloatValue);
@@ -139,7 +148,7 @@ namespace SharpTF2.Prices
                     default: //normal uncraft
                         return GetPrice(i.DefIndex, Quality.Uncraftable, 0);
                 }
-            }
+            }*/
         }
 
         /*private void BuildPriceList()
