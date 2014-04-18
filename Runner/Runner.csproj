@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B161E6B7-D728-4162-8280-9D0E3ACF5FEA}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{66414463-E26E-4825-944A-3981FE6701EB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpTF2</RootNamespace>
-    <AssemblyName>SharpTF2</AssemblyName>
+    <RootNamespace>Runner</RootNamespace>
+    <AssemblyName>Runner</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,27 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Items\Attribute.cs" />
-    <Compile Include="Items\Backpack.cs" />
-    <Compile Include="Items\Item.cs" />
-    <Compile Include="Items\ItemSchema.cs" />
-    <Compile Include="Items\Origin.cs" />
-    <Compile Include="Items\Quality.cs" />
-    <Compile Include="Prices\Price.cs" />
-    <Compile Include="Prices\PriceSchema.cs" />
-    <Compile Include="Requests\BackpackTFRequest.cs" />
-    <Compile Include="Requests\BaseRequest.cs" />
-    <Compile Include="Requests\CacheRequest.cs" />
-    <Compile Include="Requests\ProfileRequest.cs" />
-    <Compile Include="Requests\SchemaRequest.cs" />
-    <Compile Include="Requests\TF2BackpackRequest.cs" />
-    <Compile Include="Requests\IRequest.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharpTF2\SharpTF2.csproj">
+      <Project>{b161e6b7-d728-4162-8280-9d0e3acf5fea}</Project>
+      <Name>SharpTF2</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

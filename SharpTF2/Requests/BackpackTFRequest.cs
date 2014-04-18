@@ -17,7 +17,7 @@ namespace SharpTF2.Requests
         {
             CheckForAPIKey();
 
-            Uri uri = new Uri("http://backpack.tf/api/IGetPrices/v3/?format=json&key="+APIKey);
+            Uri uri = new Uri("http://backpack.tf/api/IGetPrices/v4/?format=json&raw=1&compress=1&key=" + APIKey);
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             String json = String.Empty;
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())

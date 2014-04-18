@@ -8,15 +8,16 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Collections;
+using System.IO;
 
 namespace SharpTF2.Items
 {
     /// <summary>
     /// A collection of items along with positional data.
     /// </summary>
-    public class Backpack : IEnumerable<Item>
+    public class Backpack
     {
-        public static String CacheLocation = "cache/backpack.txt";
+        public static readonly String CacheLocation = "cache/backpack.txt";
 
         #region Get
         //helper method for requesting backpack data straight from the steam servers
@@ -57,7 +58,7 @@ namespace SharpTF2.Items
                 //if (i.Position == 0 || backpack.items[i.Position] != null)
                 //    System.Diagnostics.Debugger.Break();
                 Console.WriteLine("adding item {0} at pos {1}", i.DefIndex, i.Position);
-                backpack.items[i.Position] = i;
+                backpack.Items[i.Position-1] = i;
             }
 
             return backpack;
@@ -170,24 +171,36 @@ namespace SharpTF2.Items
         }
         #endregion
 
-        public int NumberOfSlots { get; private set; }
+        public void SaveToFile(String filename = "backpack.txt")
+        {
+            String json = JsonConvert.SerializeObject(this);
+            using (StreamWriter writer = new StreamWriter(filename))
+                writer.Write(json);
+        }
 
-        private Item[] items;
+        public static Backpack LoadFromFile(String filename = "backpack.txt")
+        {
+            String json;
+            using (StreamReader reader = new StreamReader(filename))
+                json = reader.ReadToEnd();
+            Backpack bp = JsonConvert.DeserializeObject<Backpack>(json);
+            /*JToken tok = JObject.Parse(json);
+            Backpack bp = new Backpack(tok["NumberOfSlots"].Value<int>());
+            foreach (JToken item in tok["Items"])
+            {
+                Item i = JsonConvert.DeserializeObject<Item>(item.ToString());
+            }*/
+            return bp;
+        }
+
+        public int NumberOfSlots { get; set; }
+
+        public Item[] Items { get; set; }
 
         public Backpack(int slots)
         {
             this.NumberOfSlots = slots;
-            this.items = new Item[slots];
-        }
-
-        public IEnumerator<Item> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            this.Items = new Item[slots];
         }
     }
 }

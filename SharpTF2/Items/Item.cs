@@ -37,31 +37,31 @@ namespace SharpTF2.Items
             return item;
         }
 
-        public int DefIndex { get; private set; }
+        public int DefIndex { get; set; }
 
-        public uint ID { get; private set; }
+        public uint ID { get; set; }
 
-        public uint OriginalID { get; private set; }
+        public uint OriginalID { get; set; }
 
-        public String Name { get; private set; }
+        public String Name { get; set; }
 
-        public int Level { get; private set; }
+        public int Level { get; set; }
 
-        public Quality Quality { get; private set; }
+        public Quality Quality { get; set; }
 
-        public int Quantity { get; private set; }
+        public int Quantity { get; set; }
 
-        public Origin Origin { get; private set; }
+        public Origin Origin { get; set; }
 
-        public bool IsCraftable { get; private set; }
+        public bool IsCraftable { get; set; }
 
-        public bool IsTradable { get; private set; }
+        public bool IsTradable { get; set; }
 
-        public uint Position { get; private set; }
+        public uint Position { get; set; }
 
-        public Dictionary<int, int> EquipSlots { get; private set; }
+        public Dictionary<int, int> EquipSlots { get; set; }
 
-        public Dictionary<int, Attribute> Attributes { get; private set; }
+        public Dictionary<int, Attribute> Attributes { get; set; }
 
         public Item()
         {

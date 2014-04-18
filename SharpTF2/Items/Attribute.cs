@@ -45,9 +45,4 @@ namespace SharpTF2.Items
 
         public String Name;
     }
-
-    public class AttributeInfo
-    {
-
-    }
 }

@@ -30,8 +30,6 @@ namespace SharpTF2.Requests
 
             using (StreamReader file = new StreamReader(CacheLocation))
             {
-                //take out the date first
-                file.ReadLine();
                 json = file.ReadToEnd();
             }
             return json;
