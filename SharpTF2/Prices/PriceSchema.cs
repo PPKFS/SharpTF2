@@ -16,15 +16,6 @@ namespace SharpTF2.Prices
         //so this seems to be the easiest way
         public Dictionary<String, Price> PriceList = new Dictionary<String, Price>();
 
-        public static PriceSchema LoadFromFile(String filename="bptf.txt")
-        {
-            String json;
-            using (StreamReader reader = new StreamReader(filename))
-                json = reader.ReadToEnd();
-
-            return JsonConvert.DeserializeObject<PriceSchema>(json);
-        }
-
         public static PriceSchema Get(String apiKey)
         {
             BackpackTFRequest request = new BackpackTFRequest();
@@ -32,10 +23,12 @@ namespace SharpTF2.Prices
             return PriceSchema.Get(apiKey, request);
         }
 
-        public static PriceSchema Get(String apiKey, IRequest request)
+        public static PriceSchema Get(String apiKey, IRequest request, bool cache=true)
         {
             //get the json
             String raw = request.GetJSON();
+            if (cache)
+                Cache.SaveJSON("backpacktf.txt", raw);
             dynamic fullJson = JsonConvert.DeserializeObject(raw);
             dynamic json = fullJson.response;
 
@@ -49,7 +42,13 @@ namespace SharpTF2.Prices
 
             foreach (dynamic item in json.items)
             {
-                bool isAus = item.Name.StartsWith("Australium");
+                //we don't want Australium Gold
+                bool isAus = item.Name.StartsWith("Australium") && !item.Name.Contains("Gold");
+                if (item.Value.defindex["0"] == null)
+                {
+                    Console.WriteLine("Found an item with no defindex");
+                    continue;
+                }
                 int defIndex = (int)item.Value.defindex["0"].Value;
                 //and now iterate all the qualities
                 foreach (dynamic itemQuality in item.Value.prices)
@@ -114,7 +113,7 @@ namespace SharpTF2.Prices
         {
             if (isAus)
                 return String.Join("|", quality, defindex, istradable, iscraftable, "Australium");
-            else if (series == 0)
+            else if (series != 0)
                 return String.Join("|", quality, defindex, istradable, iscraftable, series);
             else
                 return String.Join("|", quality, defindex, istradable, iscraftable);

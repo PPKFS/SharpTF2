@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace SharpTF2.Requests
 {
-    class SchemaRequest : BaseRequest
+    public class SchemaRequest : BaseRequest
     {
         public override String GetJSON()
         {
             CheckForAPIKey();
 
             Uri uri = new Uri(
-                "http://api.steampowered.com/IEconItems_440/GetSchema/v0001/" + "?key=" + APIKey);
+                "http://api.steampowered.com/IEconItems_440/GetSchema/v0001/?language=en&" + "key=" + APIKey);
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             String json = String.Empty;
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())

@@ -33,6 +33,7 @@ namespace SharpTF2.Items
         {
             //get the json
             String raw = request.GetJSON();
+            Cache.SaveJSON("backpack.txt", raw);
             JToken json = JObject.Parse(raw)["result"];
 
             //parse it
@@ -59,10 +60,6 @@ namespace SharpTF2.Items
                 //    System.Diagnostics.Debugger.Break();
                 Console.WriteLine("adding item {0} at pos {1}", i.DefIndex, i.Position);
                 backpack.Items[i.Position-1] = i;
-            }
-            using(StreamWriter writer = new StreamWriter("backpackraw.txt"))
-            {
-                writer.Write(raw);
             }
 
             return backpack;
@@ -175,28 +172,6 @@ namespace SharpTF2.Items
             return Item.CreateItem(id, original_id, defindex, level, quality, position, origin, cannotTrade, cannotCraft, equip, attribs);
         }
         #endregion
-
-        public void SaveToFile(String filename = "backpack.txt")
-        {
-            String json = JsonConvert.SerializeObject(this);
-            using (StreamWriter writer = new StreamWriter(filename))
-                writer.Write(json);
-        }
-
-        public static Backpack LoadFromFile(String filename = "backpack.txt")
-        {
-            String json;
-            using (StreamReader reader = new StreamReader(filename))
-                json = reader.ReadToEnd();
-            Backpack bp = JsonConvert.DeserializeObject<Backpack>(json);
-            /*JToken tok = JObject.Parse(json);
-            Backpack bp = new Backpack(tok["NumberOfSlots"].Value<int>());
-            foreach (JToken item in tok["Items"])
-            {
-                Item i = JsonConvert.DeserializeObject<Item>(item.ToString());
-            }*/
-            return bp;
-        }
 
         public int NumberOfSlots { get; set; }
 
