@@ -27,7 +27,7 @@ namespace SharpTF2.Items
     public class ItemSchema
     {
         //schema of items, mapped by index
-        public Dictionary<int, ItemTemplate> Items = new Dictionary<int, ItemTemplate>(); //DONE
+        public Dictionary<int, ItemTemplate> Items = new Dictionary<int, ItemTemplate>();
 
         //mapping of particle effect ID to unusual effect names
         public Dictionary<int, String> UnusualNames = new Dictionary<int, String>();
@@ -94,9 +94,7 @@ namespace SharpTF2.Items
                 }
                 schema.Items.Add(defIndex, template);
             }
-            
-
-            return null;
+            return schema;
         }
 
         private static Dictionary<int, String> GetPaintNames()

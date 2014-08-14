@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Collections;
 using System.IO;
+using SharpTF2.Prices;
 
 namespace SharpTF2.Items
 {
@@ -181,6 +182,58 @@ namespace SharpTF2.Items
         {
             this.NumberOfSlots = slots;
             this.Items = new Item[slots];
+        }
+
+        public void LoadSchema(ItemSchema items)
+        {
+            foreach (Item i in Items.Where(t => t != null))
+            {
+                i.Name = items.Items[i.DefIndex].Name;
+            }
+        }
+
+        public void LoadPrices(ItemSchema items, PriceSchema prices)
+        {
+            foreach (Item i in Items.Where(t => t != null))
+            {
+                //so we've got several things to consider for prices.
+                //Strange parts
+                //Paint
+                //Killstreaks
+                //Levels
+                //Vintage levels
+                //Craft numbers
+                i.BasePrice = prices.GetPrice(i);
+
+                //strange parts
+                foreach(int attr in new int[]{ Attribute.StrangePart1, Attribute.StrangePart2, Attribute.StrangePart3})
+                {
+                    if (i.HasAttribute(attr))
+                    {
+                        Price sPart = prices.GetUniquePriceByDefindex(items.StrangePartIDs[(int)i.Attributes[attr].FloatValue]);
+                        i.AddPriceBonus(items.StrangePartNames[(int)i.Attributes[attr].FloatValue], sPart*0.5);
+                    }
+                }
+
+                //paint
+                if (i.HasAttribute(Attribute.Paint))
+                {
+                    Price paint = prices.GetUniquePriceByDefindex(items.PaintIDs[(int)i.Attributes[Attribute.Paint].FloatValue]);
+                    i.AddPriceBonus(items.PaintNames[(int)i.Attributes[Attribute.Paint].FloatValue], paint * 0.5);
+                }
+
+                //killstreaks
+                //TODO
+
+                //levels
+                //IGNORE FOR NOW, TOOD
+
+                //vintage levels
+                //TODO
+
+                //craft numbers
+                //TODO
+            }
         }
     }
 }
