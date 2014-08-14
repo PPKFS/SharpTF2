@@ -44,13 +44,13 @@ namespace SharpTF2.Items
 
 		public uint OriginalID { get; private set; }
 
-		public String Name { get; private set; }
+		public String Name { get; set; }
 
 		public ItemType Type { get; private set; }
 
-		public Price BasePrice { get; private set; }
+		public Price BasePrice { get; set; }
 
-		public List<PriceBonus> PriceBonuses { get; private set; }
+		public List<PriceBonus> PriceBonuses { get; set; }
 
 		public int Level { get; private set; }
 
@@ -64,7 +64,7 @@ namespace SharpTF2.Items
 
 		public bool IsTradable { get; private set; }
 
-		public uint Position { get; private set; }
+		public uint Position { get; set; }
 
 		public Dictionary<int, int> EquipSlots { get; private set; }
 

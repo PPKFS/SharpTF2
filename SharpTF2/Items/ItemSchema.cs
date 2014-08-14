@@ -21,6 +21,7 @@ namespace SharpTF2.Items
 
         public ItemType Type { get; set; }
     }
+
     /// <summary>
     /// The schema of all Team Fortress 2 items.
     /// </summary>
@@ -47,11 +48,22 @@ namespace SharpTF2.Items
         //mapping of defindices to their default levels (for vintage weapons)
         public Dictionary<int, int> DefaultVintageLevels = new Dictionary<int, int>(); //DONE
 
-        public static ItemSchema Get(IRequest request)
+		private String json;
+
+		public static ItemSchema Get(String apiKey, bool cache=true)
+		{
+			SchemaRequest request = new SchemaRequest();
+			request.APIKey = apiKey;
+			return ItemSchema.Get(request, cache);
+		}
+
+        public static ItemSchema Get(IRequest request, bool cache=true)
         {
             //get the json
             String raw = request.GetJSON();
-            Cache.SaveJSON("schema.txt", raw);
+			if(cache)
+				Cache.SaveJSON("schema.txt", raw);
+
             JToken json = JObject.Parse(raw)["result"];
             ItemSchema schema = new ItemSchema();
 

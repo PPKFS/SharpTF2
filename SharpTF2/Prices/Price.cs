@@ -16,6 +16,7 @@ namespace SharpTF2.Prices
     {
         public static Price Unpriced = new Price();
 
+		//note these are mid-prices; don't use them to get actual prices on keys.
         public static double RefPrice;
         public static double KeyPrice;
         public static double BudsPrice;

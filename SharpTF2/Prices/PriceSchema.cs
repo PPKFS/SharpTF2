@@ -20,36 +20,41 @@ namespace SharpTF2.Prices
         {
             BackpackTFRequest request = new BackpackTFRequest();
             request.APIKey = apiKey;
-            return PriceSchema.Get(apiKey, request);
+            return PriceSchema.Get(request);
         }
 
-        public static PriceSchema Get(String apiKey, IRequest request, bool cache=true)
+        public static PriceSchema Get(IRequest request, bool cache=true)
         {
             //get the json
             String raw = request.GetJSON();
-            if (cache)
-                Cache.SaveJSON("backpacktf.txt", raw);
+
             dynamic fullJson = JsonConvert.DeserializeObject(raw);
+			if (fullJson.success == 0)
+				return null;
+			if (cache)
+				Cache.SaveJSON("backpacktf.txt", raw);
             dynamic json = fullJson.response;
 
             PriceSchema schema = new PriceSchema();
 
             //first, get the raw prices of buds/keys/ref.
             Price.RefPrice = json.raw_usd_value;
-            Price.KeyPrice = json["items"]["Mann Co. Supply Crate Key"]["prices"]["6"]["Tradable"]
-                ["Craftable"]["0"]["value_raw"];
-            Price.BudsPrice = json["items"]["Earbuds"]["prices"]["6"]["Tradable"]["Craftable"]["0"]["value_raw"];
+			Price.KeyPrice = json.items["Mann Co. Supply Crate Key"]["prices"]["6"]["Tradable"]
+				["Craftable"][0]["value_raw"];
+            Price.BudsPrice = json["items"]["Earbuds"]["prices"]["6"]["Tradable"]["Craftable"][0]["value_raw"];
 
             foreach (dynamic item in json.items)
             {
                 //we don't want Australium Gold
                 bool isAus = item.Name.StartsWith("Australium") && !item.Name.Contains("Gold");
-                if (item.Value.defindex["0"] == null)
+                if (item.Value.defindex.Count == 0)
                 {
                     Console.WriteLine("Found an item with no defindex");
                     continue;
                 }
-                int defIndex = (int)item.Value.defindex["0"].Value;
+
+				//it's changed - now defindices are defindex: [val]
+                int defIndex = (int)item.Value.defindex[0].Value;
                 //and now iterate all the qualities
                 foreach (dynamic itemQuality in item.Value.prices)
                 {
@@ -61,17 +66,22 @@ namespace SharpTF2.Prices
                         foreach (dynamic craftableItem in tradableItem.Value)
                         {
                             bool isCraftable = (craftableItem.Name == "Craftable");
+
+
+							//it's now split into some things being Craftability: [blah blah] and some being Craftability: attribute value : blah blah
                             //this is 0 for most things, but some things like unusuals and crates have values
                             foreach (dynamic attributes in craftableItem.Value)
                             {
                                 //ignore it if it's 0.
-                                int series = Convert.ToInt32(attributes.Name);
+								bool isNested = !(craftableItem.Value is JArray);
+                                int series = isNested ? Convert.ToInt32(attributes.Name) : 0;
+								dynamic priceObject = isNested ? attributes.Value : attributes;
 
                                 Price price = new Price();
-                                double lowPrice = attributes.Value.value.Value;
-                                double highPrice = attributes.Value.value_high == null ? lowPrice : attributes.Value.value_high.Value;
+								double lowPrice = priceObject["value"].Value;
+								double highPrice = priceObject["value_high"] == null ? lowPrice : priceObject["value_high"].Value;
 
-                                String currency = attributes.Value.currency.Value;
+								String currency = priceObject["currency"].Value;
 
                                 //normalise to refined
                                 if (currency == "earbuds")

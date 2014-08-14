@@ -11,25 +11,33 @@ namespace SharpTF2.Requests
     /// <summary>
     /// A request to the http://backpack.tf API.
     /// </summary>
-    class BackpackTFRequest : BaseRequest
+    public class BackpackTFRequest : BaseRequest
     {
+		private string GetJSON(String addr)
+		{
+			CheckForAPIKey();
+			Uri uri = new Uri(addr + APIKey);
+			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
+			String json = String.Empty;
+			using (HttpWebResponse response = (HttpWebResponse)request.GetResponse()) {
+				Stream dataStream = response.GetResponseStream();
+				StreamReader reader = new StreamReader(dataStream);
+				json = reader.ReadToEnd();
+				reader.Close();
+				dataStream.Close();
+			}
+
+			return json;
+		}
+
         public override string GetJSON()
         {
-            CheckForAPIKey();
-
-            Uri uri = new Uri("http://backpack.tf/api/IGetPrices/v4/?format=json&raw=1&compress=1&key=" + APIKey);
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
-            String json = String.Empty;
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            {
-                Stream dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                json = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-            }
-
-            return json;
+			return GetJSON("http://backpack.tf/api/IGetPrices/v4/?format=json&raw=1&compress=1&key=");
         }
+
+		public string GetCurrencyJSON()
+		{
+			return GetJSON("http://backpack.tf/api/IGetCurrencies/v1/?format=json&compress=1&key=");
+		}
     }
 }
