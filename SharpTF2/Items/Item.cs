@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpTF2.Prices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,36 +38,54 @@ namespace SharpTF2.Items
             return item;
         }
 
-        public int DefIndex { get; set; }
+        public int DefIndex { get; private set; }
 
-        public uint ID { get; set; }
+        public uint ID { get; private set; }
 
-        public uint OriginalID { get; set; }
+		public uint OriginalID { get; private set; }
 
-        public String Name { get; set; }
+		public String Name { get; private set; }
 
-        public int Level { get; set; }
+		public ItemType Type { get; private set; }
 
-        public Quality Quality { get; set; }
+		public Price BasePrice { get; private set; }
 
-        public int Quantity { get; set; }
+		public List<PriceBonus> PriceBonuses { get; private set; }
 
-        public Origin Origin { get; set; }
+		public int Level { get; private set; }
 
-        public bool IsCraftable { get; set; }
+		public Quality Quality { get; private set; }
 
-        public bool IsTradable { get; set; }
+		public int Quantity { get; private set; }
 
-        public uint Position { get; set; }
+		public Origin Origin { get; private set; }
 
-        public Dictionary<int, int> EquipSlots { get; set; }
+		public bool IsCraftable { get; private set; }
 
-        public Dictionary<int, Attribute> Attributes { get; set; }
+		public bool IsTradable { get; private set; }
+
+		public uint Position { get; private set; }
+
+		public Dictionary<int, int> EquipSlots { get; private set; }
+
+		public Dictionary<int, Attribute> Attributes { get; private set; }
+
+        public Price Price
+        {
+            get
+            {
+                Price totalPrice = new Price(BasePrice);
+                foreach (PriceBonus bonus in PriceBonuses)
+                    totalPrice += bonus.BonusPrice;
+                return totalPrice;
+            }
+        }
 
         public Item()
         {
             Attributes = new Dictionary<int, Attribute>();
             EquipSlots = new Dictionary<int, int>();
+            PriceBonuses = new List<PriceBonus>();
         }
 
         public void AddEquipSlot(int slot, int val)
@@ -77,6 +96,16 @@ namespace SharpTF2.Items
         public void AddAttribute(int id, Attribute value)
         {
             Attributes[id] = value;
+        }
+
+        public bool HasAttribute(int id)
+        {
+            return Attributes.Keys.Contains(id);
+        }
+
+        public void AddPriceBonus(String name, Price price)
+        {
+            this.PriceBonuses.Add(new PriceBonus() { Name = name, BonusPrice = price });
         }
     }
 }
