@@ -25,6 +25,7 @@ namespace SharpTF2.Items
             item.IsCraftable = !cannotCraft;
             item.IsTradable = !cannotTrade;
             item.Position = position;
+			item.IsPlaced = (position != uint.MaxValue);
             if (attribs != null)
             {
                 foreach (Attribute a in attribs)
@@ -69,6 +70,16 @@ namespace SharpTF2.Items
 		public Dictionary<int, int> EquipSlots { get; private set; }
 
 		public Dictionary<int, Attribute> Attributes { get; private set; }
+
+		public bool IsPlaced { get; private set; }
+
+		public int PageNo
+		{
+			get
+			{
+				return Position == uint.MaxValue ? 0 : (int)(Math.Ceiling((double)Position / 50f));
+			}
+		}
 
         public Price Price
         {

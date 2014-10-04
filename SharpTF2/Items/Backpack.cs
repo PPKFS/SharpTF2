@@ -18,23 +18,30 @@ namespace SharpTF2.Items
     /// </summary>
     public class Backpack
     {
-        public static readonly String CacheLocation = "cache/backpack.txt";
-
         #region Get
         //helper method for requesting backpack data straight from the steam servers
+
+		public static Backpack GetFromFile(String id)
+		{
+			CacheRequest request = new CacheRequest();
+			request.CacheLocation = String.Format("backpack{0}.txt", id);
+			return Backpack.Get(request);
+		}
+
         public static Backpack Get(String profileID, String apiKey)
         {
             TF2BackpackRequest request = new TF2BackpackRequest();
             request.APIKey = apiKey;
             request.ProfileID = profileID;
-            return Backpack.Get(request);
+            return Backpack.Get(request, true, profileID);
         }
 
-        public static Backpack Get(IRequest request)
+        public static Backpack Get(IRequest request, bool cache=true, String profileID=null)
         {
             //get the json
             String raw = request.GetJSON();
-            Cache.SaveJSON("backpack.txt", raw);
+			if(cache)
+				Cache.SaveJSON(String.Format("backpack{0}.txt", profileID ?? ""), raw);
             JToken json = JObject.Parse(raw)["result"];
 
             //parse it
@@ -57,12 +64,11 @@ namespace SharpTF2.Items
             //place the items in the backpack
             foreach (Item i in items)
             {
-                //if (i.Position == 0 || backpack.items[i.Position] != null)
-                //    System.Diagnostics.Debugger.Break();
-                Console.WriteLine("adding item {0} at pos {1}", i.DefIndex, i.Position);
-                backpack.Items[i.Position-1] = i;
+				if (i.IsPlaced)
+					backpack.ItemsAsPlaced[i.Position - 1] = i;
+				else
+					backpack.UnplacedItems.Add(i);
             }
-
             return backpack;
         }
 
@@ -84,7 +90,11 @@ namespace SharpTF2.Items
             int defindex = itemJSON["defindex"].ToObject<int>();
             int level = itemJSON["level"].ToObject<int>();
             int quality = itemJSON["quality"].ToObject<int>();
-            uint position = (uint)(itemJSON["inventory"].ToObject<uint>() & 65535); //mask the top word, it's deprecated
+
+			uint inv = itemJSON["inventory"].ToObject<uint>();
+            uint position = (uint)(inv & 65535); //mask the top word, it's deprecated
+			if ((inv & 0x40000000) == 0x40000000) //except, of course, the 2nd bit (!!???!)
+				position = uint.MaxValue;
 
             //optional
             int origin = itemJSON["origin"] == null ? -1 : itemJSON["origin"].ToObject<int>();
@@ -176,17 +186,29 @@ namespace SharpTF2.Items
 
         public int NumberOfSlots { get; set; }
 
-        public Item[] Items { get; set; }
+        public Item[] ItemsAsPlaced { get; set; }
+
+		public List<Item> UnplacedItems { get; set; }
+
+		public Item[] Items
+		{
+			get
+			{
+				var arr = UnplacedItems.Concat(ItemsAsPlaced.Where(i => i != null)).ToArray();
+				return arr;
+			}
+		}
 
         public Backpack(int slots)
         {
             this.NumberOfSlots = slots;
-            this.Items = new Item[slots];
+            this.ItemsAsPlaced = new Item[slots];
+			this.UnplacedItems = new List<Item>();
         }
 
         public void LoadSchema(ItemSchema items)
         {
-            foreach (Item i in Items.Where(t => t != null))
+            foreach (Item i in Items)
             {
                 i.Name = items.Items[i.DefIndex].Name;
             }
@@ -194,7 +216,7 @@ namespace SharpTF2.Items
 
         public void LoadPrices(ItemSchema items, PriceSchema prices)
         {
-            foreach (Item i in Items.Where(t => t != null))
+            foreach (Item i in Items)
             {
                 //so we've got several things to consider for prices.
                 //Strange parts

@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpTF2", "SharpTF2\SharpTF2.csproj", "{B161E6B7-D728-4162-8280-9D0E3ACF5FEA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runner", "Runner\Runner.csproj", "{66414463-E26E-4825-944A-3981FE6701EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PricingTool", "PricingTool\PricingTool.csproj", "{D51825E2-FA92-4E65-A435-D01D29E22ADB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +23,10 @@ Global
 		{66414463-E26E-4825-944A-3981FE6701EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66414463-E26E-4825-944A-3981FE6701EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66414463-E26E-4825-944A-3981FE6701EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D51825E2-FA92-4E65-A435-D01D29E22ADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D51825E2-FA92-4E65-A435-D01D29E22ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D51825E2-FA92-4E65-A435-D01D29E22ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D51825E2-FA92-4E65-A435-D01D29E22ADB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

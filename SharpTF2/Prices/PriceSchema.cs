@@ -16,6 +16,15 @@ namespace SharpTF2.Prices
         //so this seems to be the easiest way
         public Dictionary<String, Price> PriceList = new Dictionary<String, Price>();
 
+		public const string CacheLocation = "backpacktf.txt";
+
+		public static PriceSchema GetFromFile(String filename=PriceSchema.CacheLocation)
+		{
+			CacheRequest request = new CacheRequest();
+			request.CacheLocation = filename;
+			return PriceSchema.Get(request, false);
+		}
+
         public static PriceSchema Get(String apiKey)
         {
             BackpackTFRequest request = new BackpackTFRequest();

@@ -11,7 +11,8 @@ namespace SharpTF2.Requests
     {
         public static void SaveJSON(String file, String json)
         {
-            File.WriteAllText(file, json);
+			Directory.CreateDirectory("data");
+            File.WriteAllText(Path.Combine("data", file), json);
         }
     }
 
@@ -25,7 +26,7 @@ namespace SharpTF2.Requests
                 throw new InvalidOperationException("No cache location given");
             String json = null;
 
-            using (StreamReader file = new StreamReader(CacheLocation))
+            using (StreamReader file = new StreamReader(Path.Combine("data", CacheLocation)))
             {
                 json = file.ReadToEnd();
             }

@@ -48,7 +48,14 @@ namespace SharpTF2.Items
         //mapping of defindices to their default levels (for vintage weapons)
         public Dictionary<int, int> DefaultVintageLevels = new Dictionary<int, int>(); //DONE
 
-		private String json;
+		public const string CacheLocation = "schema.txt";
+
+		public static ItemSchema GetFromFile(String filename=ItemSchema.CacheLocation)
+		{
+			CacheRequest request = new CacheRequest();
+			request.CacheLocation = filename;
+			return ItemSchema.Get(request, false);
+		}
 
 		public static ItemSchema Get(String apiKey, bool cache=true)
 		{
@@ -73,7 +80,7 @@ namespace SharpTF2.Items
                 template.Name = item["item_name"].ToObject<String>();
                 int defIndex = item["defindex"].ToObject<int>();
 
-                if (template.Name.StartsWith("Strange Part:"))
+				if (template.Name.StartsWith("Strange Part:") || template.Name.StartsWith("Strange Cosmetic Part:"))
                 {
                     int id = item["attributes"][0]["value"].ToObject<int>();
                     schema.StrangePartIDs.Add(id, defIndex);
