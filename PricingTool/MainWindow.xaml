@@ -1,0 +1,73 @@
+﻿<Window x:Class="PricingTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="600" Width="800" AllowDrop="True" Loaded="Load" TextOptions.TextFormattingMode="Display">
+    <Window.Resources>
+        <DataTemplate x:Key="WrapCell">
+            <TextBlock Text="{Binding Name}" TextWrapping="Wrap"/>
+        </DataTemplate>
+        <Color x:Key="BackgroundColor">#FF342F29</Color>
+    </Window.Resources>
+    
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,-3">
+        <ListView Name="listView" Margin="0,0,0,10" Foreground="#FFECE3CB" FontFamily="TF2" FontSize="16" FontWeight="Bold" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.Background>
+                <SolidColorBrush Color="{DynamicResource BackgroundColor}"/>
+            </ListView.Background>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Item.Name}" TextWrapping="Wrap"></TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.View>
+                <GridView x:Name="grid" AllowsColumnReorder="False">
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="Background" Value="#FF342F29" />
+                            <Setter Property="Foreground" Value="#FFECE3CB" />
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+                    <GridViewColumn Header="Quality" Width="Auto" DisplayMemberBinding="{Binding DisplayQuality}"/>
+                    <GridViewColumn Header="Name" Width="200"  CellTemplate="{StaticResource WrapCell}"/>
+                    <GridViewColumn Header="Special" Width="Auto" DisplayMemberBinding="{Binding Item.Name}" />
+                </GridView>
+            </ListView.View>
+
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontWeight="Bold" FontSize="24" Text="{Binding Name}" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Item.Quality}" Value="Unique">
+                            <Setter Property="Foreground" Value="#FFD700" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Item.Quality}" Value="Vintage">
+                            <Setter Property="Foreground" Value="#476291" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Item.Quality}" Value="Genuine">
+                            <Setter Property="Foreground" Value="#4D7455" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Item.Quality}" Value="Strange">
+                            <Setter Property="Foreground" Value="#CF6A32" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Item.Quality}" Value="Unusual">
+                            <Setter Property="Foreground" Value="#8650AC" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Item.Quality}" Value="Haunted">
+                            <Setter Property="Foreground" Value="#38F3AB" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <Grid HorizontalAlignment="Left" Height="563" Margin="545,0,0,0" VerticalAlignment="Top" Width="247"/>
+    </Grid>
+</Window>
