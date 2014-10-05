@@ -241,7 +241,8 @@ namespace SharpTF2.Items
                 if (i.HasAttribute(Attribute.Paint))
                 {
                     Price paint = prices.GetUniquePriceByDefindex(items.PaintIDs[(int)i.Attributes[Attribute.Paint].FloatValue]);
-                    i.AddPriceBonus(items.PaintNames[(int)i.Attributes[Attribute.Paint].FloatValue], paint * 0.5);
+					string paintName = items.PaintNames[(int)i.Attributes[Attribute.Paint].FloatValue];
+                    i.AddPriceBonus(paintName, paint * 0.5);
                 }
 
                 //killstreaks

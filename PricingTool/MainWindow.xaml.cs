@@ -34,9 +34,15 @@ namespace PricingTool
 			PriceSchema prices = PriceSchema.GetFromFile();
 			Backpack bp = Backpack.GetFromFile(profID);
 			bp.LoadSchema(items);
-			bp.LoadPrices(items, prices);
-
-			listView.ItemsSource = bp.Items.Select(i => new DisplayItem(i, items));
+			try
+			{
+				bp.LoadPrices(items, prices);
+			} catch(Exception f)
+			{
+				MessageBox.Show(f.Message);
+			}
+			DisplayItem.Schema = items;
+			listView.ItemsSource = bp.Items.Select(i => new DisplayItem(i));
 			GridView gridView = (listView.View as GridView);
 
 			// This variable will hold the longest string from the source list.
@@ -48,7 +54,6 @@ namespace PricingTool
 			CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listView.ItemsSource);
 			PropertyGroupDescription groupDescription = new PropertyGroupDescription("PageName");
 			view.GroupDescriptions.Add(groupDescription);
-
 		}
 
 		private void ResizeGridViewColumn(string widest, GridViewColumn column)
