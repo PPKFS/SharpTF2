@@ -58,6 +58,7 @@
     <Compile Include="Requests\TF2BackpackRequest.cs" />
     <Compile Include="Requests\IRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatsSchema.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
